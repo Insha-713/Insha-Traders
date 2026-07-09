@@ -271,7 +271,7 @@ function setupContactForm() {
     // }
 
     try {
-      await fetch("https://inshafatima678.app.n8n.cloud/webhook-test/new-inquiry", {
+      await fetch("https://inshafatima678.app.n8n.cloud/webhook/new-inquiry", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
