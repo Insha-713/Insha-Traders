@@ -986,8 +986,8 @@ textarea {
   height: 70px;
   margin: 0 auto 15px;
   border-radius: 50%;
-  background: #22c55e;
-  color: white;
+  background: #1b2399;
+  color: rgb(238, 209, 244);
   font-size: 40px;
   display: flex;
   align-items: center;
