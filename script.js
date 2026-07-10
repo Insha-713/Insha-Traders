@@ -254,21 +254,17 @@ function setupContactForm() {
   const status = form.querySelector(".form-status");
   const requestCall = document.querySelector("#requestCall");
 
-  if (window.emailjs && EMAILJS_CONFIG.publicKey !== "YOUR_EMAILJS_PUBLIC_KEY") {
-    emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey });
-  }
-
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const submitBtn = form.querySelector("button[type='submit']");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending...";
+
     status.textContent = "Sending your inquiry...";
 
     const payload = Object.fromEntries(new FormData(form).entries());
     payload.subject = "New Insha Traders Website Inquiry";
-
-    // if (!window.emailjs || EMAILJS_CONFIG.publicKey.includes("YOUR_")) {
-    //   status.textContent = "EmailJS is ready, but service ID, template ID, and public key still need to be added in script.js.";
-    //   return;
-    // }
 
     try {
       await fetch("https://insha-traders-backend.onrender.com/contact", {
@@ -278,18 +274,42 @@ function setupContactForm() {
         },
         body: JSON.stringify(payload)
       });
-      status.textContent = "Thank you. Your inquiry has been sent successfully.";
+
+      status.textContent = "✅ Thank you. Your inquiry has been sent successfully.";
+
+      document.getElementById("successPopup").style.display = "flex";
+
+      submitBtn.textContent = "Inquiry Sent ✓";
+
       form.reset();
+
     } catch (error) {
       console.error(error);
-      status.textContent = "Unable to send right now. Please call or WhatsApp Insha Traders.";
+
+      status.textContent = "❌ Unable to send right now. Please WhatsApp Insha Traders.";
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Send Inquiry";
     }
-  });
+  }); // <-- submit event yahan close hoga
+
   requestCall.addEventListener("click", () => {
     const mobile = form.elements.mobile.value.trim();
     const name = form.elements.name.value.trim() || "Website Visitor";
-    const message = encodeURIComponent(`Request call back for ${name}${mobile ? `, mobile: ${mobile}` : ""}`);
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank", "noopener");
+
+    const message = encodeURIComponent(
+      `Request call back for ${name}${mobile ? `, mobile: ${mobile}` : ""}`
+    );
+
+    window.open(
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`,
+      "_blank",
+      "noopener"
+    );
+  });
+
+  document.getElementById("closePopup").addEventListener("click", () => {
+    document.getElementById("successPopup").style.display = "none";
   });
 }
 
